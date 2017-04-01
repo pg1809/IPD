@@ -1,0 +1,320 @@
+\documentclass[12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[T1]{polski}
+\usepackage[utf8]{inputenc}
+\newcommand{\BibTeX}{{\sc Bib}\TeX} 
+\usepackage{graphicx}
+\usepackage{amsfonts}
+
+\setlength{\textheight}{21cm}
+
+\title{{\bf Zadanie nr 1 - Pojedynczy neuron i reguła Delta}\linebreak
+Inteligentne przetwarzanie danych}
+\author{Piotr Grzelak, 207549 \and Bartosz Makowski, 213565}
+\date{data oddania zadania}
+
+\begin{document}
+\clearpage\maketitle
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\section{Cel zadania}
+
+Celem zadania było zaimplementowanie pojedynczego neuronu liniowego wraz z algorytmem uczenia - regułą delta.
+
+\section{Wstęp teoretyczny}
+
+\subsection{Neuron liniowy}
+
+Neuron liniowy jest elementem obliczeniowym, który można opisać za pomocą wektora wag $\textbf{w}$. Dla zadanego wektora wejściowego $\textbf{x}$ oblicza on jako swoją odpowiedź następującą funkcję:
+
+\[ f(x) = \sum_{i=1}^n x_i w_i \]
+
+gdzie $n$ oznacza ilość wymiarów wektorów $\textbf{x}$ i $\textbf{w}$, a $x_i$ i $w_i$ oznaczają i-te współrzędne owych wektorów.
+
+\subsection{Reguła delta}
+
+W celu wyznaczenia wektora $\textbf{w}$ neuron poddaje się procesowi treningu. W tym celu należy przygotować zbiór par $(\textbf{x}, z)$ gdzie $\textbf{x}$ jest wektorem wejściowym, a $z$ jest oczekiwaną odpowiedzią neuronu na podany wektor wejściowy. Jest to tzw. zbiór treningowy. Proces treningu polega na znalezieniu takich wartości wag neuronu, dla których będzie on obliczał wartość najbardziej zbliżoną do oczekiwanej odpowiedzi dla danego wektora wejściowego. Niech:
+
+\begin{itemize}
+\item $N$ - liczba wag neuronu
+\item $M$ - ilość elementów w zbiorze treningowym
+\item $K$ - liczba epok treningu (ilość iteracji jaką będzie wykonywany algorytm)
+\item $\Omega=\lbrace(\textbf{x}^m, z^m) \in \mathbb{R}^N \times \mathbb{R}, \, m=1, \ldots , M \rbrace$ - zbiór $M$ przykładów treningowych gdzie para: $(\textbf{x}^m, z^m)$ będzie oznaczała $m$-ty przykład treningowy
+\item $\eta$ - współczynnik nauki
+\end{itemize}
+
+Algorytm ma następującą postać:
+
+\begin{enumerate}
+\item Przypisz wagom neuronu losowe wartości z wybranego wcześniej przedziału: $[\omega_1, \omega_2]$. Przypisz $k=1$, oznaczające numer aktualnej epoki treningu.
+\item Jeśli $k > K$ zakończ algorytm, w przeciwnym razie kontynuuj
+\item Przypisz $m=1$ oznaczające numer prezentowanego przykładu treningowego.
+\item Sprawdź czy $m > M$. Jeśli tak to przejdź do , w przeciwnym razie kontynuuj
+\item Dla wektora wejściowego $\textbf{x}^m = [x^m_1, \ldots , x^m_n]$ z obecnie przetwarzanego przykładu treningowego, oblicz wyjście neuronu według wzoru:
+
+\[ y = \sum_{i=1}^N x^m_i w_i \]
+
+\item Oblicz różnicę między otrzymanym wyjściem neuronu, a oczekiwaną wartością $z^m$ z przykładu treningowego: $\delta = y - z^m$
+
+\item Zaktualizuj wartości wag neuronu według wzoru:
+
+\[ w_i^k = w_i^{(k-1)} + \eta  \delta x^m_i \]
+
+gdzie: $w_i^k$ oznacza nową wartość $i$-tej wagi, a $w_i^{(k - 1)}$ jej dotychczasową wartość
+
+\item Zwiększ wartość $m$ o 1 i przejdź do kroku 4
+\item Zwiększ wartość $k$ o 1 i przejdź do kroku 2 
+
+\end{enumerate}
+
+\section{Eksperymenty i wyniki}
+
+Eksperymenty przeprowadzono wykorzystując zbiór treningowy opisany równaniem:
+
+\[ z^m = \alpha_1 x^m_1 + \alpha_2 x^m_2 + \ldots + \alpha_N x^m_N + \epsilon_m \]
+
+gdzie: 
+
+\begin{itemize}
+\item $z^m$ - oczekiwana odpowiedź w $m$-tym przykładzie treningowym
+\item $x^m_1,\ldots, x^m_N$ - współrzędne wektora wejściowego w $m$-tym przykładzie treningowym
+\item $\alpha_1, \ldots, \alpha_N$ - współczynniki wygenerowane losowo z przedziału $[-2; 2]$
+\item $\epsilon_m$ - współczynnik wygenerowany losowo z przedziału $[-1,5; 1,5]$ dla $m$-tego przykładu treningowego
+\end{itemize}
+
+Wartości współrzędnych każdego z wektorów wejściowych wylosowano z przedziału $[0; 10]$.
+
+Dla każdego eksperymentu obliczono błąd średniokwadratowy odpowiedzi dawanych przez neuron względem oczekiwanych wartości. Błąd ten wyraża się wzorem:
+
+\[ MSE = \frac{1}{M}\sum_{m=1}^M (z^m - y^m)^2 \]
+
+gdzie $y^m$ oznacza odpowiedź neuronu na $m$-ty przykład wejściowy.
+
+Początkowe wagi neuronu losowano z przedziału $[-1; 1]$. 
+
+Testom poddano neuron posiadający 10 wejść.
+
+Program zaimplementowano w języku Java.
+
+\subsection{Eksperyment nr 1}
+
+Eksperyment przeprowadzono dla następujących parametrów:
+
+\begin{itemize}
+\item rozmiar zbioru treningowego: $M = 20$ 
+\item współczynnik nauki: $\eta = 0,001$
+\item liczba epok treningu: $K = 100$
+\end{itemize}
+
+Poniższa tabela zawiera odpowiedzi neuronu $\textbf{y}$ dla przykładów treningowych zestawione z odpowiedziami oczekiwanymi $\textbf{z}$.
+
+\clearpage
+
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline 
+Odpowiedź neuronu $\textbf{y}$ & Oczekiwana odpowiedź $\textbf{z}$ \\ 
+\hline 
+4,932 & 4,353 \\ \hline 
+7,830 & 10,300 \\ \hline 
+6,825 & 5,988 \\ \hline 
+9,237 & 9,463 \\ \hline 
+8,322 & 7,038 \\ \hline 
+14,277 & 14,076 \\ \hline 
+11,481 & 11,834 \\ \hline 
+11,066 & 12,621 \\ \hline 
+11,698 & 11,377 \\ \hline 
+2,113 & 2,688 \\ \hline 
+7,106 & 7,734 \\ \hline 
+6,828 & 6,512 \\ \hline 
+4,934 & 5,132 \\ \hline 
+12,448 & 12,645 \\ \hline 
+10,046 & 8,623 \\ \hline 
+8,234 & 8,600 \\ \hline 
+5,421 & 3,946 \\ \hline 
+3,070 & 2,690 \\ \hline 
+4,364 & 5,397 \\ \hline
+\end{tabular} 
+\end{table}
+
+Błąd średniokwadratowy: $MSE = 0,946$
+
+\subsection{Eksperyment nr 2}
+
+Eksperyment przeprowadzono dla następujących parametrów:
+
+\begin{itemize}
+\item rozmiar zbioru treningowego: $M = 20$ 
+\item współczynnik nauki: $\eta = 0,01$
+\item liczba epok treningu: $K = 100$
+\end{itemize}
+
+Poniższa tabela zawiera odpowiedzi neuronu $\textbf{y}$ dla przykładów treningowych zestawione z odpowiedziami oczekiwanymi $\textbf{z}$.
+
+\clearpage
+
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline 
+Odpowiedź neuronu $\textbf{y}$ & Oczekiwana odpowiedź $\textbf{z}$ \\ 
+\hline 
+NaN & 5,132 \\ \hline 
+NaN & 10,300 \\ \hline 
+NaN & 2,688 \\ \hline 
+NaN & 11,834 \\ \hline 
+NaN & 8,623 \\ \hline 
+NaN & 11,377 \\ \hline 
+NaN & 5,988 \\ \hline 
+NaN & 9,463 \\ \hline 
+NaN & 14,076 \\ \hline 
+NaN & 7,734 \\ \hline 
+NaN & 2,690 \\ \hline 
+NaN & 12,645 \\ \hline 
+NaN & 4,353 \\ \hline 
+NaN & 6,512 \\ \hline 
+NaN & 7,038 \\ \hline 
+NaN & 12,621 \\ \hline 
+NaN & 3,946 \\ \hline 
+NaN & 5,397 \\ \hline 
+NaN & 8,600 \\ \hline
+\end{tabular} 
+\end{table}
+
+Błąd średniokwadratowy: $MSE = $NaN
+
+Program jako wartości wag ustawił NaN (Not a number) co oznacza, że proces uczenia nie był zbieżny. 
+
+\subsection{Eksperyment nr 3}
+
+Eksperyment przeprowadzono dla następujących parametrów:
+
+\begin{itemize}
+\item rozmiar zbioru treningowego: $M = 20$ 
+\item współczynnik nauki: $\eta = 0,001$
+\item liczba epok treningu: $K = 1000$
+\end{itemize}
+
+Poniższa tabela zawiera odpowiedzi neuronu $\textbf{y}$ dla przykładów treningowych zestawione z odpowiedziami oczekiwanymi $\textbf{z}$.
+
+\clearpage
+
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline 
+Odpowiedź neuronu $\textbf{y}$ & Oczekiwana odpowiedź $\textbf{z}$ \\ 
+\hline 
+9,415 & 9,463 \\ \hline 
+2,268 & 2,688 \\ \hline 
+10,163 & 8,623 \\ \hline 
+11,996 & 11,377 \\ \hline 
+12,548 & 12,645 \\ \hline 
+11,725 & 11,834 \\ \hline 
+5,207 & 5,132 \\ \hline 
+8,355 & 8,600 \\ \hline 
+14,400 & 14,076 \\ \hline 
+7,261 & 7,734 \\ \hline 
+3,203 & 2,69 \\ \hline 
+7,062 & 6,512 \\ \hline 
+5,078 & 4,353 \\ \hline 
+5,525 & 3,946 \\ \hline 
+11,188 & 12,621 \\ \hline 
+7,902 & 10,300 \\ \hline 
+6,864 & 5,988 \\ \hline 
+8,414 & 7,038 \\ \hline 
+4,552 & 5,397 \\ \hline
+\end{tabular} 
+\end{table}
+
+Błąd średniokwadratowy: $MSE = 0,953$
+
+\subsection{Eksperyment nr 4}
+
+Eksperyment przeprowadzono dla następujących parametrów:
+
+\begin{itemize}
+\item rozmiar zbioru treningowego: $M = 20$ 
+\item współczynnik nauki: $\eta = 0,001$
+\item liczba epok treningu: $K = 10$
+\end{itemize}
+
+Poniższa tabela zawiera odpowiedzi neuronu $\textbf{y}$ dla przykładów treningowych zestawione z odpowiedziami oczekiwanymi $\textbf{z}$.
+
+\clearpage
+
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline 
+Odpowiedź neuronu $\textbf{y}$ & Oczekiwana odpowiedź $\textbf{z}$ \\ 
+\hline 
+5,271 & 2,690 \\ \hline
+11,534 & 12,621 \\ \hline
+8,104 & 6,512 \\ \hline
+12,019 & 11,377 \\ \hline
+9,378 & 7,734 \\ \hline
+7,766 & 3,946 \\ \hline
+12,663 & 14,076 \\ \hline
+11,456 & 9,463 \\ \hline
+7,615 & 5,988 \\ \hline
+8,744 & 10,300 \\ \hline
+7,832 & 8,600 \\ \hline
+13,59 & 12,645 \\ \hline
+4,519 & 5,132 \\ \hline
+4,593 & 4,353 \\ \hline
+12,319 & 11,834 \\ \hline
+9,688 & 8,623 \\ \hline
+3,362 & 5,397 \\ \hline
+7,966 & 7,038 \\ \hline
+2,469 & 2,688 \\ \hline
+\end{tabular} 
+\end{table}
+
+Błąd średniokwadratowy: $MSE = 2,497$
+
+\subsection{Eksperyment nr 5}
+
+Eksperyment przeprowadzono dla następujących parametrów:
+
+\begin{itemize}
+\item rozmiar zbioru treningowego: $M = 10$ 
+\item współczynnik nauki: $\eta = 0,001$
+\item liczba epok treningu: $K = 100$
+\end{itemize}
+
+Poniższa tabela zawiera odpowiedzi neuronu $\textbf{y}$ dla przykładów treningowych zestawione z odpowiedziami oczekiwanymi $\textbf{z}$.
+
+\clearpage
+
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline 
+Odpowiedź neuronu $\textbf{y}$ & Oczekiwana odpowiedź $\textbf{z}$ \\ 
+\hline 
+7,233 & 6,512 \\ \hline
+8,749 & 8,600 \\ \hline
+4,719 & 5,132 \\ \hline
+4,428 & 4,353 \\ \hline
+8,324 & 8,623 \\ \hline
+4,253 & 3,946 \\ \hline
+2,603 & 2,688 \\ \hline
+7,898 & 7,734 \\ \hline
+11,674 & 11,834 \\ \hline
+\end{tabular} 
+\end{table}
+
+Błąd średniokwadratowy: $MSE = 0,096$
+
+\section{Wnioski}
+
+\begin{itemize}
+\item Bardzo ważne jest dobranie odpowiedniej wartości współczynnika nauki. Zbyt duża wartość może spowodować, że proces uczenia neuronu nie będzie zbieżny, co pokazał eksperyment 2.
+\item Zwiększenie liczby epok treningu wpływa pozytywnie na proces treningu neuronu. Pokazały to eksperymenty 1 i 4. Błąd średniokwadratowy w eksperymencie 1 był mniejszy od tego w eksperymencie 4. Warto jednak zauważyć, że wzrost jakości rezultatów treningu w stosunku do liczby epok nie jest liniowy. Od pewnego momentu zwiększenie liczby iteracji nie przynosi już korzyści. Pokazał to eksperyment 3, w którym nie osiągnięto lepszych wyników niż w eksperymencie 1 mimo większej liczby epok.
+\item Ciekawe rezultaty przyniósł eksperyment 5 w zestawieniu z eksperymentem 1. Zmniejszenie rozmiaru treningowego przyczyniło się do uzyskania dużo lepszych rezultatów treningu. Otrzymany błąd średniokwadratowy był o rząd wielkości mniejszy. Przyczyną takiego stanu rzeczy może być to, że mniejszy zbiór treningowy posiada mniejszą wariancję co sprawia, że dopasowanie wartości wag minimalizujących błąd popełniany przez neuron jest dużo łatwiejszym zadaniem. Należy jednak mieć wątpliwości czy neuron nauczony na takim zbiorze będzie w stanie dawać lepsze odpowiedzi na przykładach spoza zbioru treningowego. 
+\end{itemize}
+
+\begin{thebibliography}{0}
+
+\bibitem{wyklad} Materiały udostępnione na stronie przedmiotu, na platformie Wikamp.
+
+\end{thebibliography}
+\end{document}
