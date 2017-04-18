@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface Trainer {
 
-    void train(List<TrainingSample> trainingSet, Neuron neuron);
+    TrainingResult train(List<TrainingSample> trainingSet, Neuron neuron);
 }

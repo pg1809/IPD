@@ -6,8 +6,6 @@ import java.util.*;
 
 public class Program {
 
-    private static final long SEED = 1000;
-
     public static void main(String[] args) throws Exception {
 
         Scanner scanner = new Scanner(System.in);
@@ -15,7 +13,7 @@ public class Program {
         double weightsLowerBound = scanner.nextDouble();
         double weightsUpperBound = scanner.nextDouble();
 
-        Random random = new Random(SEED);
+        Random random = new Random();
         double[] initialNeuronWeights = random.doubles(inputDimensions, weightsLowerBound, weightsUpperBound).toArray();
 
         Neuron neuron = new Neuron(initialNeuronWeights);
@@ -41,18 +39,16 @@ public class Program {
 
         List<TrainingSample> trainingSet = generator.generateTrainingSet(inputDimensions, trainingSetSize);
 
-        Trainer trainer = new DeltaRuleTrainer(learningRate, epochsNum);
-        trainer.train(trainingSet, neuron);
+        Trainer trainer = new DeltaRuleTrainer(learningRate, epochsNum, 1);
+        TrainingResult result = trainer.train(trainingSet, neuron);
 
-        double mse = 0;
         for (TrainingSample sample : trainingSet) {
             double neuronOutput = neuron.neuronOutput(sample.input);
-            mse += Math.pow(neuronOutput - sample.expectedOutput, 2);
             System.out.println("Neuron output: " + NumberFormat.getNumberInstance().format(neuronOutput) +
                     "; expected output: " + NumberFormat.getNumberInstance().format(sample.expectedOutput));
         }
 
-        mse /= trainingSet.size();
-        System.out.println("MSE for training set: " + NumberFormat.getNumberInstance().format(mse));
+        System.out.println("MSE for training set: " + NumberFormat.getNumberInstance().format(result.meanSquaredError));
+        System.out.println("The number of epochs it took to train neuron: " + result.epochsNum);
     }
 }

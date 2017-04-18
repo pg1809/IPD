@@ -12,15 +12,20 @@ public class DeltaRuleTrainer implements Trainer {
 
     private final int epochsNum;
 
-    public DeltaRuleTrainer(double learningRate, int epochsNum) {
+    private final double errorThreshold;
+
+    public DeltaRuleTrainer(double learningRate, int epochsNum, double errorThreshold) {
         this.learningRate = learningRate;
         this.epochsNum = epochsNum;
+        this.errorThreshold = errorThreshold;
     }
 
     @Override
-    public void train(List<TrainingSample> trainingSet, Neuron neuron) {
-        for (int i = 0; i < epochsNum; i++) {
+    public TrainingResult train(List<TrainingSample> trainingSet, Neuron neuron) {
+        double error = 0;
+        for (int k = 1; k <= epochsNum; k++) {
             Collections.shuffle(trainingSet);
+
             for (TrainingSample trainingSample : trainingSet) {
                 double neuronOutput = neuron.neuronOutput(trainingSample.input);
                 double delta = trainingSample.expectedOutput - neuronOutput;
@@ -31,6 +36,21 @@ public class DeltaRuleTrainer implements Trainer {
                     neuron.updateWeight(w, updatedWeight);
                 }
             }
+
+            error = 0;
+            for (TrainingSample trainingSample : trainingSet) {
+                double neuronOutput = neuron.neuronOutput(trainingSample.input);
+                double delta = trainingSample.expectedOutput - neuronOutput;
+
+                error += Math.pow(delta, 2);
+            }
+
+            error /= trainingSet.size();
+            if (error <= errorThreshold) {
+                return new TrainingResult(k, error);
+            }
         }
+
+        return new TrainingResult(epochsNum, error);
     }
 }
