@@ -20,13 +20,15 @@ public class Program {
         SignDetectionAlgorithm signDetectionAlgorithm = new SignDetectionAlgorithm(trainingSet);
 
         List<double[][]> testSet = DataIO.loadTestSetFromFile(testSetFile);
-        for (double[][] testPattern : testSet) {
+        for (int i = 1; i <= testSet.size(); ++i) {
+            double[][] testPattern = testSet.get(i - 1);
+            System.out.println("Test example nr " + i);
             DetectionOutput detectionOutput = signDetectionAlgorithm.detectSign(testPattern);
             for (Map.Entry<String, Double> outputsEntry : detectionOutput.getPatternsWithConfidence().entrySet()) {
                 System.out.println("Network recognized pattern: " + outputsEntry.getKey()
                         + " with confidence: " + NumberFormat.getNumberInstance().format(outputsEntry.getValue()));
             }
-            System.out.println("Pattern recognized by network: " + detectionOutput.getRecognizedPattern());
+            System.out.println("Pattern recognized by network: " + detectionOutput.getRecognizedPattern() + "\n");
         }
     }
 }

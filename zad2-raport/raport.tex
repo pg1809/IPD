@@ -1,0 +1,348 @@
+\documentclass[12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[T1]{polski}
+\usepackage[utf8]{inputenc}
+\newcommand{\BibTeX}{{\sc Bib}\TeX} 
+\usepackage{graphicx}
+\usepackage{amsfonts}
+
+\setlength{\textheight}{21cm}
+
+\title{{\bf Zadanie nr 2 - Sieć MADALINE do rozpoznawania znaków}\linebreak
+Inteligentne przetwarzanie danych}
+\author{Piotr Grzelak, 207549 \and Bartosz Makowski, 213565}
+\date{22.04.2017 r.}
+
+\begin{document}
+\clearpage\maketitle
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\section{Cel zadania}
+
+Celem zadania było zaimplementowanie sieci neuronowej typu MADALINE służącej do rozpoznawania znaków.
+
+\section{Wstęp teoretyczny}
+
+Sieć MADALINE można wykorzystać do rozpoznawania wzorców. Składa się z dwóch warstw:
+\begin{itemize}
+\item warstwy wejściowej
+\item warstwy wyjściowej
+\end{itemize}
+
+Warstwę wejściową tworzą tzw. neurony kopiujące, których zadaniem jest powielenie swojego wejścia na wyjścia biegnące do warstwy wyjściowej. Neuronów kopiujących jest tyle ile elementów posiada wektor podawany na wejście sieci. Każdy neuron kopiujący odpowiada jednej współrzędnej wektora wejściowego.
+
+Warstwa wyjściowa składa się z neuronów liniowych, posiadających identycznościową funkcję aktywacji.
+
+Algorytm rozpoznawania wzorców działa następująco:
+\begin{itemize}
+\item Na wejście sieci podawany jest wektor reprezentujący obiekt, który ma zostać rozpoznany. Wektor ten musi wcześniej zostać znormalizowany tj. przekształcony do wektora, którego długość wynosi 1.
+\item Każdemu neuronowi wyjściowemu odpowiada jeden zadany wzorzec. Jako rozpoznany przez sieć wzorzec przyjmowany jest ten, którego neuron odpowiedział największą wartością na zadany wektor wejściowy
+\end{itemize}
+
+Proces treningu, a właściwie konstrukcji sieci MADALINE polega na ustawieniu wektorów reprezentujących każdy z wzorców jako wektorów wag neuronów wyjściowych. Wektory te muszą zostać wcześniej znormalizowane.
+
+\clearpage
+
+\section{Eksperymenty i wyniki}
+
+Eksperymenty przeprowadzono dla sieci przygotowanej do rozpoznawania znaków X, Y, Z zapisanych jako binarne obrazy rozmiarów 4 x 4 piksele:
+\begin{itemize}
+\item 
+Znak X
+
+x - - x \\
+- x x - \\
+- x x - \\
+x - - x \\
+
+\item
+Znak Y
+ 
+x - - x \\
+- x x - \\
+- x - - \\
+x - - - \\
+
+\item
+Znak Z
+
+x x x x \\
+- - x - \\
+- x - - \\
+x x x x \\
+\end{itemize}
+
+gdzie symbol ''x'' oznacza piksel o wartości 1, a ''-'' piksel o wartości 0. Wewnątrz sieci wzorce były reprezentowane jako 16-sto wymiarowe wektory powstałe przez "rozpłaszczenie" obrazów.
+
+Na wejście sieci podawano całe obrazy o rozmiarach takich jak wzorcowe. Obrazy te były przekształcane do wektorów wejściowych w taki sam sposób jak opisano dla obrazów wzorcowych.
+
+\clearpage
+
+\subsection{Eksperyment nr 1}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x - - x \\
+- x x - \\
+- x x - \\
+x - - x \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 1,000 \\ \hline 
+Y & 0,866 \\ \hline 
+Z & 0,671 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{X}
+
+Wzorzec oczekiwany: \textbf{X}
+
+\subsection{Eksperyment nr 2}
+
+Na wejście sieci podano obraz:
+
+\noindent
+- x - x \\
+- x x - \\
+- x x - \\
+x - x - \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,750 \\ \hline 
+Y & 0,722 \\ \hline 
+Z & 0,671 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{X}
+
+Wzorzec oczekiwany: \textbf{X}
+
+\clearpage
+
+\subsection{Eksperyment nr 3}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x - - x \\
+- x - - \\
+- x x - \\
+x - - x \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,935 \\ \hline 
+Y & 0,772 \\ \hline 
+Z & 0,598 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{X}
+
+Wzorzec oczekiwany: \textbf{X}
+
+\subsection{Eksperyment nr 4}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x - - x \\
+- x x - \\
+- x - - \\
+x - - - \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,866 \\ \hline 
+Y & 1,000 \\ \hline 
+Z & 0,645 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{Y}
+
+Wzorzec oczekiwany: \textbf{Y}
+
+\clearpage
+
+\subsection{Eksperyment nr 5}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x - - x \\
+- x x - \\
+- - x - \\
+- x - - \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,722 \\ \hline 
+Y & 0,667 \\ \hline 
+Z & 0,516 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{X}
+
+Wzorzec oczekiwany: \textbf{Y}
+
+\subsection{Eksperyment nr 6}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x - - x \\
+- x x - \\
+- x - - \\
+- - - - \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,791 \\ \hline 
+Y & 0,913 \\ \hline 
+Z & 0,566 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{Y}
+
+Wzorzec oczekiwany: \textbf{Y}
+
+\clearpage
+
+\subsection{Eksperyment nr 7}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x x x x \\
+- - x - \\
+- x - - \\
+x x x x \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,671 \\ \hline 
+Y & 0,645 \\ \hline 
+Z & 1,000 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{Z}
+
+Wzorzec oczekiwany: \textbf{Z}
+
+\subsection{Eksperyment nr 8}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x x x x \\
+x - - x \\
+- x - - \\
+x x x x \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,533 \\ \hline 
+Y & 0,492 \\ \hline 
+Z & 0,858 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{Z}
+
+Wzorzec oczekiwany: \textbf{Z}
+
+\clearpage
+
+\subsection{Eksperyment nr 9}
+
+Na wejście sieci podano obraz:
+
+\noindent
+x x x - \\
+- - x - \\
+- x - - \\
+x x - x \\
+
+Rezultaty otrzymane przez sieć:
+
+\begin{table}[h]
+\begin{tabular}{|c|c|}
+\hline 
+Wzorzec & Odpowiedź neuronu \\ 
+\hline 
+X & 0,625 \\ \hline 
+Y & 0,577 \\ \hline 
+Z & 0,894 \\ \hline 
+\end{tabular} 
+\end{table}
+
+Wzorzec rozpoznany przez sieć: \textbf{Z}
+
+Wzorzec oczekiwany: \textbf{Z}
+
+\section{Wnioski}
+
+\begin{itemize}
+\item Dla przeprowadzonych eksperymentów sieć dała satysfakcjonujące wyniki. Tylko w jednym eksperymencie został rozpoznany zły znak.
+\item Niezaprzeczalną zaletą sieci MADALINE jest jej prostota i łatwość implementacji.
+\item Neurony wyjściowe sieci obliczają iloczyn skalarny wektora wejściowego ze swoimi wektorami wagowymi reprezentującymi poszczególne wzorce. Iloczyn skalarny pełni tutaj rolę miary podobieństwa wektora wejściowego od wektora reprezentującego wzorzec. Im większe jest to podobieństwo tym wartość miary jest większa.
+\item Bardzo ważne jest dobranie odpowiedniej reprezentacji wektorowej wzorców, które mają zostać rozpoznawane. Dla wielu problemów jest to trudne zadanie.
+\item W wielu przypadkach może być niemożliwe manualne znalezienie właściwego dla danego problemu wzorca spośród dostępnych danych. W takiej sytuacji należałoby zastosować bardziej złożone narzędzia niż sieć MADALINE np. sieć Kohonena czy wielowartswowy perceptron. 
+\end{itemize}
+
+\begin{thebibliography}{0}
+
+\bibitem{wyklad} Materiały udostępnione na stronie przedmiotu, na platformie Wikamp.
+
+\end{thebibliography}
+\end{document}
